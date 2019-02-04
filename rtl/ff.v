@@ -31,6 +31,7 @@ module ff(
 	  input        js_r,
 	  input        js_u,
 	  input        js_d,
+	  input [15:0]	js_analog,
 	  input [8:1]  sw1, 
 	  output       o_led1,
 	  output       o_led2,
@@ -1227,9 +1228,9 @@ hsync ? 8'hff :
 
 `ifdef normal_video
    always @(posedge s_6mhz or negedge blank_n)
-     if (~blank_n | reset)
-       rgb <= 8'b0;
-     else
+     //if (~blank_n | reset)
+     //  rgb <= 8'b0;
+     //else
        rgb <= rgb_cr_out;
 `endif
 
@@ -1325,7 +1326,8 @@ hsync ? 8'hff :
 
    // analogout_n drive STRT on ADC0809
    // analogin enables LS244 -> bd[7:0]
-
+   //assign analog_out = js_analog;
+	
    joystick joystick(.clk6m(s_6mhz),
 		     .reset(reset),
 		     .vblank(vblank),
@@ -1333,6 +1335,7 @@ hsync ? 8'hff :
 		     .js_r(js_r),
 		     .js_u(js_u),
 		     .js_d(js_d),
+			  .analog(js_analog),
 		     .a(ba[2:1]),
 		     .wr_n(analogout_n),
 		     .rd_n(analogin_n),
@@ -1493,7 +1496,7 @@ hsync ? 8'hff :
 `endif
 
 
-`define CHIPSCOPE_FF
+//`define CHIPSCOPE_FF
 //`define trig_cpu
    
 `ifdef __CVER__

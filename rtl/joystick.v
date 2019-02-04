@@ -13,6 +13,7 @@ module joystick(
 		input [1:0]   a,
 		input 	      wr_n,
 		input 	      rd_n,
+		input  [15:0] analog,
 		output [15:0] data_out
 		);
 
@@ -31,7 +32,7 @@ module joystick(
 
    always @(negedge clk6m)
      if (reset)
-       horiz <= 0;
+       horiz <= 127;
      else
        if (rise)
 	 begin
@@ -60,7 +61,7 @@ module joystick(
    
    always @(negedge clk6m)
      if (reset)
-       vert <= 0;
+       vert <= 127;
      else
        if (rise)
 	 begin
@@ -94,10 +95,12 @@ module joystick(
        if (rd_n)
 	 begin
 	    case (a)
-	      2'b00: out <= 0;
+	      2'b00: out <= 127;
 	      2'b01: out <= vert;
-	      2'b10: out <= 0;
+			//2'b01: out<= analog[15:8];
+	      2'b10: out <= 127;
 	      2'b11: out <= horiz;
+	      //2'b11: out <= 127;//analog[7:0];
 	    endcase
 	 end
 

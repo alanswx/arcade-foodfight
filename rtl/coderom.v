@@ -22,7 +22,7 @@ module coderom(
    reg [7:0] rom3[0:8191];
    reg [7:0] d;
 
-`include "../roms/v3/rom_code_alt.v"
+//`include "../roms/v3/rom_code_alt.v"
    
    assign out = d;
    
