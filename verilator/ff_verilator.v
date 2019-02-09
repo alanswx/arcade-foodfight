@@ -16,10 +16,12 @@ module ff_verilator;
    
    wire       hsync;
    wire       vsync;
+   wire       blank;
    wire [7:0] rgb;
    
    wire       led1;
    wire       led2;
+   wire       led3;
    wire [11:0] sw/*verilator public_flat*/;
    wire [8:1]  sw1/*verilator public_flat*/;
    
@@ -42,8 +44,10 @@ module ff_verilator;
 	      .reset(reset),
 	      .led1(led1),
 	      .led2(led2),
+	      .led3(led3),
 	      .hsync(cga_hsync),
 	      .vsync(cga_vsync),
+	      .blank(blank),
 	      .rgb(cga_rgb),
 	      .audio(audio),
 	      .clk_6mhz_o(clk_6mhz_o),

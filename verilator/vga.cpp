@@ -22,6 +22,8 @@ static unsigned int old_hsync, old_vsync;
 static unsigned int pw_hsync, pw_vsync;
 static int show_vis;
 static int show_stats;
+static SDL_Joystick *joystick;
+
 
 static struct {
     int hpol, vpol;
@@ -55,24 +57,82 @@ static void dump_stats(void)
     printf("\n");
 }
 
+int joystick_x()
+{
+	if (joystick) {
+	   SDL_JoystickUpdate();
+		return SDL_JoystickGetAxis(joystick, 0);
+	}
+	else {
+		printf("joystick is null?\n");
+		return 0;
+	}
+}
+int joystick_y()
+{
+	if (joystick)
+		return SDL_JoystickGetAxis(joystick, 1);
+	else 
+		return 0;
+}
+
+int joystick_throw()
+{
+	if (joystick)
+		return SDL_JoystickGetButton(joystick,2);
+	else 
+		return 0;
+}
+int joystick_test()
+{
+	if (joystick)
+		return SDL_JoystickGetButton(joystick,1);
+	else 
+		return 0;
+}
+
+
+
+//void dpi_vga_init (const svLogicVecVal* hv, const svLogicVecVal* vv)
 void dpi_vga_init(int h, int v)
 {
     int flags;
 
-    cols = h;
-    rows = v;
+ //   cols = hv->aval;
+ //   rows = vv->aval;
 
     show_vis = 0;
     show_stats = 0;
 
     printf("Initialize display %dx%d\n", cols, rows);
 
-    flags = SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE;
+    flags = SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE| SDL_INIT_JOYSTICK;
 
     if (SDL_Init(flags)) {
         printf("SDL initialization failed\n");
         return;
     }
+
+    joystick=NULL;
+    int numJoysticks=SDL_NumJoysticks();
+    printf("AJS: numJoysticks: %d\n",numJoysticks);
+
+    if (numJoysticks>=1)
+	    joystick=SDL_JoystickOpen(0);
+    printf("AJS: numJoysticks: %d %x\n",numJoysticks,joystick);
+
+      if(joystick)
+  {
+    printf("Opened Joystick 0\n");
+    printf("Name: %s\n", SDL_JoystickName(0));
+    printf("Number of Axes: %d\n", SDL_JoystickNumAxes(joystick));
+    printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(joystick));
+    printf("Number of Balls: %d\n", SDL_JoystickNumBalls(joystick));
+  }
+  else
+    printf("Couldn't open Joystick 0\n");
+
+
 
     /* NOTE: we still want Ctrl-C to work - undo the SDL redirections*/
     signal(SIGINT, SIG_DFL);
@@ -95,16 +155,20 @@ void dpi_vga_init(int h, int v)
 //    row_vsync = 0;
 
     init_stats();
-}
 
 
 //static int eol;
 //static int eof;
+}
 
+//void dpi_vga_display (const svLogicVecVal* vsync_, const svLogicVecVal* hsync_, const svLogicVecVal* pixel_)
 void dpi_vga_display(int vsync, int hsync, int pixel)
 {
     unsigned char *ps;
     int offset, hedge, vedge;
+ //   int vsync=vsync_->aval;
+ //   int hsync=hsync_->aval;
+ //   int pixel=pixel_->aval;
 
     if(screen == NULL) {
         printf("Error: display not initialized\n");
