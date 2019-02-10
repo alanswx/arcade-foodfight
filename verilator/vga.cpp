@@ -98,6 +98,8 @@ void dpi_vga_init(int h, int v)
 {
     int flags;
 
+    cols = h;
+    rows = v;
  //   cols = hv->aval;
  //   rows = vv->aval;
 
