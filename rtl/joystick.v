@@ -21,7 +21,8 @@ module joystick(
    reg [7:0] out;
    reg 	     hist;
    wire      rise;
-   
+   reg   [1:0] cur_a;
+
    always @(posedge clk6m)
      if (reset)
        hist <= 0;
@@ -92,16 +93,24 @@ module joystick(
      if (reset)
        out <= 0;
      else
-       if (rd_n)
-	 begin
-	    case (a)
-	      2'b00: out <= 127;
-	      2'b01: out <= vert;
-			//2'b01: out<= analog[15:8];
+	  begin
+	    // the original AtoD would start the conversion on the wr_n signal
+		 //  then it would wait 8 cycles to finish - and then flag that it was done, and output the values
+		 // this might be hacky, we wait until we see the "read" signal, and then we output the value 
+		 // based on the a value that was given when the start signal was sent.
+	    if (wr_n==0)
+		 begin
+			cur_a = a;
+		 end
+       if (rd_n==0)
+			begin
+			case (cur_a)
+		   2'b00: out <= 127;
+	      2'b01: out <= analog[15:8];
 	      2'b10: out <= 127;
-	      2'b11: out <= horiz;
-	      //2'b11: out <= 127;//analog[7:0];
-	    endcase
+	      2'b11: out <= analog[7:0];
+			endcase
+		end
 	 end
 
    assign data_out = { 8'b0, out };

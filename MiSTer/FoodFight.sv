@@ -247,8 +247,16 @@ wire m_start1 = btn_one_player  | joy[5];
 wire m_start2 = btn_two_players | joy[6];
 wire m_coin   = m_start1 | m_start2;
 
-wire [7:0] joyx=8'd256-($signed(analog_joy_0[7:0])+8'd128); 
-wire [7:0] joyy=8'd256-($signed(analog_joy_0[15:8])+8'd128); 
+// Using the self test in MAME:
+// 00000000 right
+// 01111111 center (127)
+// 11111111 left
+
+// The joystick is from -128 to 127 with 0 as center from MiSTer
+// we need to normalize from 0 to 255, and flip.
+
+wire [7:0] joyx=8'd255-($signed(analog_joy_0[7:0])+8'd128); 
+wire [7:0] joyy=8'd255-($signed(analog_joy_0[15:8])+8'd128); 
 
 ff ff(
 	  .clk_12mhz(clk12m),
