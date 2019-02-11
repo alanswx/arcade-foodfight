@@ -482,6 +482,8 @@ set_location_assignment PIN_W10 -to altera_reserved_tdi
 set_location_assignment PIN_Y9 -to altera_reserved_tdo
 set_location_assignment PIN_U13 -to auto_stp_external_clock_1
 set_instance_assignment -name IO_STANDARD "2.5 V" -to auto_stp_external_clock_1
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/Pokey/POKEY.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/Pokey/matoro.sv
 set_global_assignment -name VERILOG_FILE ../rtl/coderom16.v
 set_global_assignment -name VERILOG_FILE ../rtl/coderom.v
 set_global_assignment -name VERILOG_FILE ../rtl/coderam.v

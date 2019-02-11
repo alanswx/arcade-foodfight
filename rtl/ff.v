@@ -14,8 +14,10 @@
 //`define normal_video_with_line
 `define normal_video
 `define orig_video_timing
+//`define original_pokey
 
 module ff(
+	  input        clk_100mhz,
 	  input        clk_12mhz,
 	  input        clk_6mhz,
 	  input        reset,
@@ -236,6 +238,7 @@ module ff(
    wire       vma;
    wire [7:0] audout;
    wire [5:0] audout0, audout1, audout2;
+   wire [3:0] audioout0, audioout1, audioout2;
 
 
    // playfield
@@ -1280,8 +1283,13 @@ hsync ? 8'hff :
    assign vma = ~vma_n;
 
    assign audout = {2'b0, audout0} + {2'b0, audout1} + {2'b0, audout2};
-   assign o_audio = audout;
-   
+   //assign o_audio = audout;
+	
+`ifdef original_pokey	
+	   assign o_audio = audout0+audout1+audout2;
+
+
+	
    pokey pokey_2(
 		 .phi2(e),
 		 .reset(reset),
@@ -1295,6 +1303,8 @@ hsync ? 8'hff :
 		 .aud(audout2)
 		 );
 
+
+	
    pokey pokey_1(
 		 .phi2(e),
 		 .reset(reset),
@@ -1308,6 +1318,8 @@ hsync ? 8'hff :
 		 .aud(audout1)
 		 );
 
+
+	
    pokey pokey_0(
 		 .phi2(e),
 		 .reset(reset),
@@ -1321,7 +1333,60 @@ hsync ? 8'hff :
 		 .aud(audout0)
 		 );
 
+`else
 
+   //assign o_audio = audioout2+audioout1+audioout0;
+   assign o_audio = {audioout2,4'b0000} + {audioout1,4'b0000} + {audioout0,4'b0000} ;
+	 POKEY pokey_2
+	(
+		.Din(bd_out[7:0]),
+		 .Dout(),
+		 .A(ba[4:1]),
+		 .P(8'b0),
+		 .phi2(e),
+		 .readHighWriteLow(br_w_n),
+		 .cs0Bar(audio2_n),
+		 //.cs0Bar(vma),
+		 //.cs1_n(audio2_n),
+		 .audio(audioout2),
+		.clk(clk_100mhz),
+		// .aud(audout2),
+   );
+
+	 POKEY pokey_1
+	(
+		.Din(bd_out[7:0]),
+		 .Dout(),
+		 .A(ba[4:1]),
+		 .P(8'b0),
+		 .phi2(e),
+		 .readHighWriteLow(br_w_n),
+		 .cs0Bar(audio1_n),
+		 //.cs0Bar(vma),
+		 //.cs1_n(audio2_n),
+		 .audio(audioout1),
+		.clk(clk_100mhz),
+		// .aud(audout2),
+   );
+
+	 POKEY pokey_0
+	(
+		.Din(bd_out[7:0]),
+		 .Dout(pokey_out),
+		 .A(ba[4:1]),
+		 .P(sw1),
+		 .phi2(e),
+		 .readHighWriteLow(br_w_n),
+		 .cs0Bar(audio0_n),
+		 //.cs0Bar(vma),
+		 //.cs1_n(audio2_n),
+		 .audio(audioout0),
+		.clk(clk_100mhz),
+		// .aud(audout2),
+   );
+	
+	
+`endif
 // page 38
 
    // analogout_n drive STRT on ADC0809

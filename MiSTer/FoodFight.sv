@@ -259,6 +259,7 @@ wire [7:0] joyx=8'd255-($signed(analog_joy_0[7:0])+8'd128);
 wire [7:0] joyy=8'd255-($signed(analog_joy_0[15:8])+8'd128); 
 
 ff ff(
+		.clk_100mhz(clk100m),
 	  .clk_12mhz(clk12m),
 	  .clk_6mhz(clk6m),
 	  .reset(reset),
@@ -308,7 +309,8 @@ ff_top ff_top(
 
 wire [11:0] sw;
 wire [8:1]  sw1;
-wire [7:0] audio;
+//wire [7:0] audio;
+wire [3:0] audio;
 
 //   assign sw = { sw_js_d, sw_js_u, sw_js_r, sw_js_l,
 //		 sw_coin1, sw_coin2, sw_start1, sw_start2,
@@ -327,7 +329,7 @@ assign sw1 = 8'hbf;
 			
 ///////////////////////////////////////////////////
 //wire clk_sys, clk_ram, clk_ram2, clk_pixel, locked;
-wire clk_sys,locked,clk12m,clk6m;
+wire clk_sys,locked,clk12m,clk6m,clk100m;
 wire hsync,vsync;
 
 wire [7:0] rgb;
@@ -377,7 +379,8 @@ assign VGA_DE=~(blank);
 assign CLK_VIDEO=clk_sys;
 
 */
-
+assign AUDIO_L={audio,8'b00000000};
+assign AUDIO_R=AUDIO_L;
 
 //assign AUDIO_L= {audio[1],7'b0};
 //assign AUDIO_R= {audio[4],7'b0};
@@ -385,8 +388,8 @@ assign CLK_VIDEO=clk_sys;
 //assign AUDIO_R= {1'b0,audio[1] | audio[4],6'b0};
 
 
-assign AUDIO_L={audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],1'b0,1'b0,1'b0,8'b00000000};
-assign AUDIO_R={audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],1'b0,1'b0,1'b0,8'b00000000};
+//assign AUDIO_L={audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],1'b0,1'b0,1'b0,8'b00000000};
+//assign AUDIO_R={audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],audio[1] | audio[4],1'b0,1'b0,1'b0,8'b00000000};
 
 /*
 wire dac_o;
@@ -535,7 +538,8 @@ pll pll (
 	 .locked ( locked    ),        // PLL is running stable
 	 .outclk_0    (clk_sys), 		//25
 	 .outclk_1     ( clk12m   ),      //12
-	 .outclk_2     ( clk6m     )        // 6 MHz
+	 .outclk_2     ( clk6m     )   ,     // 6 MHz
+	 .outclk_3 (clk100m)
 	 );
 	 
 	 
