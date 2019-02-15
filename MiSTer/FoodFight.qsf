@@ -508,33 +508,6 @@ set_global_assignment -name VERILOG_FILE ../rtl/joystick.v
 set_global_assignment -name VERILOG_FILE ../rtl/ff.v
 set_global_assignment -name VERILOG_FILE ../rtl/ds_dac.v
 set_global_assignment -name SYSTEMVERILOG_FILE FoodFight.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sys/vip_config.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sys/video_mixer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sys/video_cleaner.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sys/vga_out.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sys/sysmem.sv
-set_global_assignment -name VERILOG_FILE sys/sys_top.v
 set_global_assignment -name QIP_FILE sys/sys.qip
-set_global_assignment -name VERILOG_FILE sys/spdif.v
-set_global_assignment -name VERILOG_FILE sys/sigma_delta_dac.v
-set_global_assignment -name VERILOG_FILE sys/sd_card.v
-set_global_assignment -name VERILOG_FILE sys/scanlines.v
-set_global_assignment -name VERILOG_FILE sys/scandoubler.v
-set_global_assignment -name VERILOG_FILE sys/reset_source.v
-set_global_assignment -name VERILOG_FILE sys/pll_hdmi_cfg.v -library pll_hdmi_cfg
-set_global_assignment -name QIP_FILE sys/pll_hdmi_cfg.qip
-set_global_assignment -name VHDL_FILE sys/pll_hdmi_adj.vhd
-set_global_assignment -name VERILOG_FILE sys/pll_hdmi.v -library pll_hdmi
-set_global_assignment -name QIP_FILE sys/pll_hdmi.qip
-set_global_assignment -name QIP_FILE sys/pll.qip
-set_global_assignment -name SOURCE_FILE sys/pll.cmp
-set_global_assignment -name VERILOG_FILE sys/osd.v
-set_global_assignment -name SYSTEMVERILOG_FILE sys/lpf48k.sv
-set_global_assignment -name VERILOG_FILE sys/i2s.v
-set_global_assignment -name VERILOG_FILE sys/i2c.v
-set_global_assignment -name SYSTEMVERILOG_FILE sys/hq2x.sv
-set_global_assignment -name VERILOG_FILE sys/hps_io.v
-set_global_assignment -name SYSTEMVERILOG_FILE sys/hdmi_config.sv
-set_global_assignment -name VHDL_FILE sys/ascal.vhd
 set_global_assignment -name VERILOG_FILE ../verif/xilinx.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

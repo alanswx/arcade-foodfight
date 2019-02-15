@@ -47,6 +47,15 @@ module pal(
    assign audio1 = addr == 8'ha4;
    assign audio0 = addr == 8'ha8;
 
+	
+   // !pf      =  !as & a23 & !a22 & !a21 & !a20 & !a19 & !a18 ;
+   
+	//assign audio0_n  =  !as_n & addr[23] & ~addr[22] &  addr[21] & ~addr[20] &  addr[19] & ~addr[18] ;
+   //assign audio1_n  =  !as_n & addr[23] & ~addr[22] &  addr[21] & ~addr[20] & ~addr[19] &  addr[18] ;
+	//assign audio2_n  =  !as_n & addr[23] & ~addr[22] &  addr[21] & ~addr[20] &  addr[19] &  addr[18] ;
+
+	
+	
 //   assign dtack  = /*addr >= 8'h00 && addr <= 8'h7f*/addr[23] ? 1'b0 : 1'b1;
 `ifdef SIMULATION
    assign dtack  = (^addr === 1'bX) ? 1'b0 :

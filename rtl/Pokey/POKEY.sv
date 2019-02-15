@@ -33,6 +33,8 @@ module POKEY
    input logic 	     cs0Bar,
    output logic      aud,
 	output logic [3:0] audio,
+	output logic [7:0] SOD,
+	output logic [7:0] SID,
    //This clk is the 100 MHz clock, and is not a pin on the POKEY DIP
    input logic 	     clk
    );
@@ -132,6 +134,11 @@ module POKEY
 		    begin
 		       skCtl <= dataIn;
 		    end
+			 if(!readHighWriteLow & (A == 4'hD))
+			begin
+				SOD <= dataIn;
+			end
+
 	       end
 	     else
 	       begin
@@ -140,6 +147,7 @@ module POKEY
 		       case(A)
 			 4'h8: dataOut <= allPot;
 			 4'hA: dataOut <= rngRead;
+			 4'hD: dataOut <= SID;
 		       endcase
 		    end
 		  else
@@ -155,6 +163,7 @@ module POKEY
 			 4'h7: audc4 <= dataIn;
 			 4'h8: audCtl <= dataIn;
 			 4'hB: allPot <= P;
+			 4'hD: SOD <= dataIn;
 			 4'hF: skCtl <= dataIn;
 		       endcase // case (A)
 		    end // else: !if(readHighWriteLow)

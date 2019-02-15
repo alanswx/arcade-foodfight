@@ -121,7 +121,7 @@ localparam CONF_STR = {
 	"A.FFIGHT;;",
 	"-;",
 	"-;",
-	"-;",
+	"O1,Test,Off,On;",
 	"-;",
 	"T6,Reset;",
 	"J,Throw,Start 1P,Start 2P;",
@@ -263,7 +263,7 @@ ff ff(
 	  .clk_12mhz(clk12m),
 	  .clk_6mhz(clk6m),
 	  .reset(reset),
-	  .test(~btn_test),
+	  .test(~status[1]),
 	  .throw2(1),
 	  .throw1(~m_fire),
 	  .coinaux(1),
@@ -286,6 +286,8 @@ ff ff(
 	  .o_blank(blank),
 	  .o_rgb(rgb),
 	  .o_audio(audio),
+	  .o_audioL(audioL),
+	  .o_audioR(audioR),
 	  .o_clk_6mhz()
 	  );
 /*
@@ -309,8 +311,10 @@ ff_top ff_top(
 
 wire [11:0] sw;
 wire [8:1]  sw1;
-//wire [7:0] audio;
-wire [3:0] audio;
+wire [7:0] audio;
+wire [7:0] audioL;
+wire [7:0] audioR;
+//wire [3:0] audio;
 
 //   assign sw = { sw_js_d, sw_js_u, sw_js_r, sw_js_l,
 //		 sw_coin1, sw_coin2, sw_start1, sw_start2,
@@ -379,9 +383,13 @@ assign VGA_DE=~(blank);
 assign CLK_VIDEO=clk_sys;
 
 */
+//assign AUDIO_L={{audio,audio},8'b00000000};
+assign AUDIO_L={audioL,8'b00000000};
+assign AUDIO_R={audioR,8'b00000000};
+/*
 assign AUDIO_L={audio,8'b00000000};
 assign AUDIO_R=AUDIO_L;
-
+*/
 //assign AUDIO_L= {audio[1],7'b0};
 //assign AUDIO_R= {audio[4],7'b0};
 //assign AUDIO_L= {1'b0,audio[1] | audio[4],6'b0};

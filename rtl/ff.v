@@ -44,6 +44,8 @@ module ff(
 	  output       o_blank,
 	  output [7:0] o_rgb,
 	  output [7:0] o_audio,
+	  output [7:0] o_audioL,
+	  output [7:0] o_audioR,
 	  output       o_clk_6mhz
 	  );
 
@@ -127,7 +129,9 @@ module ff(
    wire 	 r_w_u_n, r_w_l_n, r_n_w;
    wire 	 as;
    wire [7:0] 	 digital_out;
-   wire [7:0] 	 pokey_out;
+   wire [7:0] 	 pokey_out0;
+   wire [7:0] 	 pokey_out1;
+   wire [7:0] 	 pokey_out2;
    wire [15:0] 	 analog_out;
    wire [3:0] 	 nvram_out;
 
@@ -237,7 +241,7 @@ module ff(
    // sound
    wire       vma;
    wire [7:0] audout;
-   wire [5:0] audout0, audout1, audout2;
+   wire [7:0] audout0, audout1, audout2;
    wire [3:0] audioout0, audioout1, audioout2;
 
 
@@ -251,7 +255,9 @@ module ff(
 		 ~u_n_v ? pf_out :
 		 ~objram_n ? moram_out :
 		 ~analogin_n ? analog_out :
-		 ~audio0_n ? { 8'b0, pokey_out } :
+		 ~audio0_n ? { 8'b0, pokey_out0 } :
+		 ~audio1_n ? { 8'b0, pokey_out1 } :
+		 ~audio2_n ? { 8'b0, pokey_out2 } :
 		 ~digitalin_n ? { 8'b0, digital_out } :
 		 ~nvram_n ? { 12'b0, nvram_out } :
 		 16'b0;
@@ -1282,11 +1288,16 @@ hsync ? 8'hff :
 
    assign vma = ~vma_n;
 
-   assign audout = {2'b0, audout0} + {2'b0, audout1} + {2'b0, audout2};
-   //assign o_audio = audout;
+   //assign audout = {2'b0, audout0} + {2'b0, audout1} + {2'b0, audout2};
+   assign audout =  audout0+ audout1 + audout2;
 	
 `ifdef original_pokey	
-	   assign o_audio = audout0+audout1+audout2;
+	 //  assign o_audio = {audout0+audout1+audout2;
+   //assign audout = {2'b0, audout0} + {2'b0, audout1} + {2'b0, audout2};
+   //assign o_audio = audioout2+audioout1+audioout0;
+   assign o_audio = audout;
+	assign o_audioL =  audout2+audout1;
+	assign o_audioR = audout0 ;
 
 
 	
@@ -1294,11 +1305,11 @@ hsync ? 8'hff :
 		 .phi2(e),
 		 .reset(reset),
 		 .r_w_n(br_w_n),
-		 .cs0_n(vma),
+		 .cs0_n(vma_n),
 		 .cs1_n(audio2_n),
 		 .a(ba[4:1]),
 		 .d_in(bd_out[7:0]),
-		 .d_out(),
+		 .d_out(pokey_out2),
 		 .p(8'b0),
 		 .aud(audout2)
 		 );
@@ -1309,11 +1320,11 @@ hsync ? 8'hff :
 		 .phi2(e),
 		 .reset(reset),
 		 .r_w_n(br_w_n),
-		 .cs0_n(vma),
+		 .cs0_n(vma_n),
 		 .cs1_n(audio1_n),
 		 .a(ba[4:1]),
 		 .d_in(bd_out[7:0]),
-		 .d_out(),
+		 .d_out(pokey_out1),
 		 .p(8'b0),
 		 .aud(audout1)
 		 );
@@ -1324,11 +1335,11 @@ hsync ? 8'hff :
 		 .phi2(e),
 		 .reset(reset),
 		 .r_w_n(br_w_n),
-		 .cs0_n(vma),
+		 .cs0_n(vma_n),
 		 .cs1_n(audio0_n),
 		 .a(ba[4:1]),
 		 .d_in(bd_out[7:0]),
-		 .d_out(pokey_out),
+		 .d_out(pokey_out0),
 		 .p(sw1),
 		 .aud(audout0)
 		 );
@@ -1336,54 +1347,129 @@ hsync ? 8'hff :
 `else
 
    //assign o_audio = audioout2+audioout1+audioout0;
-   assign o_audio = {audioout2,4'b0000} + {audioout1,4'b0000} + {audioout0,4'b0000} ;
+	assign o_audio = {2'b0, audioout2} + {2'b0, audioout1} + {2'b0, audioout0};
+	assign o_audioL =  {2'b0, audioout2};
+	assign o_audioR = {2'b0, audioout1} + {2'b0, audioout0};
+
+   //assign o_audio = {audioout2,4'b0000} + {audioout1,4'b0000} + {audioout0,4'b0000} ;
 	 POKEY pokey_2
 	(
 		.Din(bd_out[7:0]),
-		 .Dout(),
+		 .Dout(pokey_out2),
 		 .A(ba[4:1]),
 		 .P(8'b0),
 		 .phi2(e),
 		 .readHighWriteLow(br_w_n),
-		 .cs0Bar(audio2_n),
+		 .cs0Bar(audio2_n&vma),
 		 //.cs0Bar(vma),
 		 //.cs1_n(audio2_n),
 		 .audio(audioout2),
-		.clk(clk_100mhz),
+		.clk(clk_100mhz)
 		// .aud(audout2),
    );
 
+	// CS0 -==Audio2 - 
+	// CS1  == VMA         
+	//  vma-     0
+	//  audio2-  0 
+	
 	 POKEY pokey_1
 	(
 		.Din(bd_out[7:0]),
-		 .Dout(),
+		 .Dout(pokey_out1),
 		 .A(ba[4:1]),
 		 .P(8'b0),
 		 .phi2(e),
 		 .readHighWriteLow(br_w_n),
-		 .cs0Bar(audio1_n),
+		 //.cs0Bar(audio1_n|vma_n),
+		 .cs0Bar(~audio1_n&vma_n),
 		 //.cs0Bar(vma),
 		 //.cs1_n(audio2_n),
 		 .audio(audioout1),
-		.clk(clk_100mhz),
+		 .SOD(pokey_serial),
+		 .SID(pokey_serial_2),
+		.clk(clk_100mhz)
 		// .aud(audout2),
    );
 
+	// CS0 - == VMA   0 
+	// CS1  == Audio1 1   
+	// audio - == 0 
+	// vma     == 0 &
+	wire pokey_serial;
+	wire pokey_serial_2;
 	 POKEY pokey_0
 	(
-		.Din(bd_out[7:0]),
-		 .Dout(pokey_out),
+		.Din(bd_out[7:0]),  
+		 .Dout(pokey_out0),
 		 .A(ba[4:1]),
 		 .P(sw1),
 		 .phi2(e),
 		 .readHighWriteLow(br_w_n),
-		 .cs0Bar(audio0_n),
+		 .cs0Bar(audio0_n&vma),
 		 //.cs0Bar(vma),
 		 //.cs1_n(audio2_n),
 		 .audio(audioout0),
-		.clk(clk_100mhz),
+		 .SID(pokey_serial),
+		 .SOD(pokey_serial_2),
+		.clk(clk_100mhz)
+		
 		// .aud(audout2),
    );
+	
+	// Audio 0 -- CS0 - == audio0 -    CS1 - == vma
+	
+	/*
+	pokey2 pokey_0 (
+		 .CLK(e),
+		 .ENABLE_179(1'b0),
+		 .RESET_N(~reset),
+		 .r_w_n(br_w_n),
+		 .cs0_n(vma_n),
+		 .cs1_n(audio0_n),
+		 .ADDR(ba[4:1]),
+		 .DATA_IN(bd_out[7:0]),
+		 .DATA_OUT(pokey_out),
+		 .POT_IN(sw1),
+		 .aud(audout0)
+
+	WR_EN : IN STD_LOGIC;
+	
+	RESET_N : IN STD_LOGIC;
+	
+	-- keyboard interface
+	keyboard_scan_enable : in std_logic := '0';
+	keyboard_scan : out std_logic_vector(5 downto 0);
+	keyboard_response : in std_logic_vector(1 downto 0);
+	
+	-- pots - go high as capacitor charges
+	POT_IN : in std_logic_vector(7 downto 0);
+	
+	-- sio interface
+	SIO_IN1 : IN std_logic;
+	SIO_IN2 : IN std_logic;
+	SIO_IN3 : IN std_logic;
+	
+	DATA_OUT : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+	
+	CHANNEL_0_OUT : OUT STD_LOGIC_VECTOR(3 downto 0);
+	CHANNEL_1_OUT : OUT STD_LOGIC_VECTOR(3 downto 0);
+	CHANNEL_2_OUT : OUT STD_LOGIC_VECTOR(3 downto 0);
+	CHANNEL_3_OUT : OUT STD_LOGIC_VECTOR(3 downto 0);
+	
+	IRQ_N_OUT : OUT std_logic;
+	
+	SIO_OUT1 : OUT std_logic;
+	SIO_OUT2 : OUT std_logic;
+	SIO_OUT3 : OUT std_logic;
+	
+	SIO_CLOCKIN_IN : IN std_logic := '1';
+	SIO_CLOCKIN_OUT : OUT std_logic;
+	SIO_CLOCKIN_OE : OUT std_logic;
+	SIO_CLOCKOUT : OUT std_logic;
+	
+	POT_RESET : out std_logic
+*/
 	
 	
 `endif
