@@ -14,7 +14,7 @@
 //`define normal_video_with_line
 `define normal_video
 `define orig_video_timing
-//`define original_pokey
+`define original_pokey
 
 module ff(
 	  input        clk_100mhz,
@@ -1570,7 +1570,7 @@ hsync ? 8'hff :
 
    always @(negedge vma or negedge audio0_n)
      if (~vma && ~audio0_n)
-       $display("pokey0: a=%x, in=%x out=%x r_w_n=%b %t", a[4:1], bd_out[7:0], pokey_out, br_w_n, $time);
+       $display("pokey0: a=%x, in=%x out=%x r_w_n=%b %t", a[4:1], bd_out[7:0], pokey_out0, br_w_n, $time);
    
    always @(negedge vma or negedge audio1_n)
      if (~vma && ~audio1_n)

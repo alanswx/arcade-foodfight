@@ -16,7 +16,8 @@
 Vff_verilator *top;                     	  // Instantiation of module
 //Vff_verilator_ff_verilator *topv;
 
-static unsigned long long main_time = 0;  // Current simulation time
+//static unsigned long long main_time = 0;  // Current simulation time
+static vluint64_t main_time = 0;  // Current simulation time
 
 void init_roms(void);
 
@@ -52,63 +53,64 @@ dump_last_pc(void)
 }
 
 /* public */
-#define RESET	top->v__DOT__reset
-#define vsw	top->v__DOT__sw
-#define vsw1	top->v__DOT__sw1
+#define RESET	top->ff_verilator__DOT__reset
+#define vsw	top->ff_verilator__DOT__sw
+#define vsw1	top->ff_verilator__DOT__sw1
+#define js top->ff_verilator__DOT__js_analog
 
-#define vCLK	top->v__DOT__CLK
-#define vclk25	top->v__DOT__clk25
-#define vclk12  top->v__DOT__clk12
-#define vclk6   top->v__DOT__clk6
+#define vCLK	top->ff_verilator__DOT__CLK
+#define vclk25	top->ff_verilator__DOT__clk25
+#define vclk12  top->ff_verilator__DOT__clk12
+#define vclk6   top->ff_verilator__DOT__clk6
 
 /* private */
-#define LED1 	top->v__DOT__uut__DOT__ff__DOT__led1
-#define LED2	top->v__DOT__uut__DOT__ff__DOT__led2
-//#define S_6MHZ	top->v__DOT__uut__DOT__ff__DOT__s_6mhz
-#define S_6MHZ	top->v__DOT__clk_6mhz_o
+#define LED1 	top->ff_verilator__DOT__uut__DOT__ff__DOT__led1
+#define LED2	top->ff_verilator__DOT__uut__DOT__ff__DOT__led2
+//#define S_6MHZ	top->ff_verilator__DOT__uut__DOT__ff__DOT__s_6mhz
+#define S_6MHZ	top->ff_verilator__DOT__clk_6mhz_o
 
-#define UDS_N	top->v__DOT__uut__DOT__ff__DOT__uds_n
-#define LDS_N	top->v__DOT__uut__DOT__ff__DOT__lds_n
-#define AS_N	top->v__DOT__uut__DOT__ff__DOT__as_n
-#define R_W_N	top->v__DOT__uut__DOT__ff__DOT__r_w_n
-#define RAM0_N	top->v__DOT__uut__DOT__ff__DOT__ram0_n
-#define RAM1_N	top->v__DOT__uut__DOT__ff__DOT__ram1_n
-#define ROM_OUT	top->v__DOT__uut__DOT__ff__DOT__mb_out_rom
-#define OUT_RAM top->v__DOT__uut__DOT__ff__DOT__mb_out_ram
+#define UDS_N	top->ff_verilator__DOT__uut__DOT__ff__DOT__uds_n
+#define LDS_N	top->ff_verilator__DOT__uut__DOT__ff__DOT__lds_n
+#define AS_N	top->ff_verilator__DOT__uut__DOT__ff__DOT__as_n
+#define R_W_N	top->ff_verilator__DOT__uut__DOT__ff__DOT__r_w_n
+#define RAM0_N	top->ff_verilator__DOT__uut__DOT__ff__DOT__ram0_n
+#define RAM1_N	top->ff_verilator__DOT__uut__DOT__ff__DOT__ram1_n
+#define ROM_OUT	top->ff_verilator__DOT__uut__DOT__ff__DOT__mb_out_rom
+#define OUT_RAM top->ff_verilator__DOT__uut__DOT__ff__DOT__mb_out_ram
 
-#define ROM_PIA_CS    top->v__DOT__uut__DOT__rom_pia_cs
-#define ROM_PIA_RS    top->v__DOT__uut__DOT__rom_pia_rs
-#define ROM_PIA_WRITE top->v__DOT__uut__DOT__rom_pia_write
-#define MPU_DATA_OUT  top->v__DOT__uut__DOT__mpu_data_out
+#define ROM_PIA_CS    top->ff_verilator__DOT__uut__DOT__rom_pia_cs
+#define ROM_PIA_RS    top->ff_verilator__DOT__uut__DOT__rom_pia_rs
+#define ROM_PIA_WRITE top->ff_verilator__DOT__uut__DOT__rom_pia_write
+#define MPU_DATA_OUT  top->ff_verilator__DOT__uut__DOT__mpu_data_out
 
-#define SCAN_RAM top->v__DOT__scanconv__DOT__scan_ram__DOT__ram
-#define PFRAM_H  top->v__DOT__uut__DOT__ff__DOT__pfram__DOT__ramh
-#define PFRAM_L  top->v__DOT__uut__DOT__ff__DOT__pfram__DOT__raml
-#define MORAM_H  top->v__DOT__uut__DOT__ff__DOT__moram__DOT__ramh__DOT__ram
-#define MORAM_L  top->v__DOT__uut__DOT__ff__DOT__moram__DOT__raml__DOT__ram
-#define COLORAM  top->v__DOT__uut__DOT__ff__DOT__coloram__DOT__ram
+#define SCAN_RAM top->ff_verilator__DOT__scanconv__DOT__scan_ram__DOT__ram
+#define PFRAM_H  top->ff_verilator__DOT__uut__DOT__ff__DOT__pfram__DOT__ramh
+#define PFRAM_L  top->ff_verilator__DOT__uut__DOT__ff__DOT__pfram__DOT__raml
+#define MORAM_H  top->ff_verilator__DOT__uut__DOT__ff__DOT__moram__DOT__ramh__DOT__ram
+#define MORAM_L  top->ff_verilator__DOT__uut__DOT__ff__DOT__moram__DOT__raml__DOT__ram
+#define COLORAM  top->ff_verilator__DOT__uut__DOT__ff__DOT__coloram__DOT__ram
 
 #ifndef no_cpu
-#define PC	 top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__pc_out
-#define PC_OUT	 top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__pc_out
-#define DATA_OUT top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__data_out
+#define PC	 top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__pc_out
+#define PC_OUT	 top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__pc_out
+#define DATA_OUT top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__data_out
 
-#define DR	top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_datareg__DOT__dr
-#define AR	top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_adrreg__DOT__ar
-#define SSP	top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_adrreg__DOT__ssp
-#define USP	top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_adrreg__DOT__usp
+#define DR	top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_datareg__DOT__dr
+#define AR	top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_adrreg__DOT__ar
+#define SSP	top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_adrreg__DOT__ssp
+#define USP	top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_adrreg__DOT__usp
 
-#define FC_OUT_I   top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__fc_out_i
-#define EXEC_STATE top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_ctrl__DOT__exec_state
-#define CHK_PC_I   top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__chk_pc_i
-#define WAITSTATES top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_bus_if__DOT__waitstates
-#define ADR_I	    top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__adr_i
-#define TRAP_AERR_I top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__trap_aerr_i
-#define HALT_IN	    top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__halt_in
-#define STATUS_REG_I top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__status_reg_i
+#define FC_OUT_I   top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__fc_out_i
+#define EXEC_STATE top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_ctrl__DOT__exec_state
+#define CHK_PC_I   top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__chk_pc_i
+#define WAITSTATES top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_bus_if__DOT__waitstates
+#define ADR_I	    top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__adr_i
+#define TRAP_AERR_I top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__trap_aerr_i
+#define HALT_IN	    top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__halt_in
+#define STATUS_REG_I top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__status_reg_i
 
-#define EX_STATE    top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_irq_ctrl__DOT__ex_state
-#define VECTOR_NO   top->v__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_irq_ctrl__DOT__vector_no
+#define EX_STATE    top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_irq_ctrl__DOT__ex_state
+#define VECTOR_NO   top->ff_verilator__DOT__uut__DOT__ff__DOT__cpu__DOT__wf68k00ip_top__DOT__i_68k00__DOT__i_irq_ctrl__DOT__vector_no
 #else
 #define PC_OUT	 0
 #endif // no_cpu
@@ -472,7 +474,7 @@ int main(int argc, char** argv)
 
 #ifndef no_cpu
 //?
-top->v__DOT__uut__DOT__ff__DOT__reset_n = RESET ? 0 : 1;
+top->ff_verilator__DOT__uut__DOT__ff__DOT__reset_n = RESET ? 0 : 1;
 #endif
 
 	// evaluate model

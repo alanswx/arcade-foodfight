@@ -23,6 +23,7 @@ module ff_verilator;
    wire [11:0] sw/*verilator public_flat*/;
    wire [8:1]  sw1/*verilator public_flat*/;
    
+   wire [15:0] js_analog/*verilator public_flat*/;
 
    
    //-------------------------------------------------------------------
@@ -48,7 +49,13 @@ module ff_verilator;
 	      .audio(audio),
 	      .clk_6mhz_o(clk_6mhz_o),
 	      .sw(sw),
-	      .sw1(sw1)
+	      .sw1(sw1),
+	.clk_100mhz(),
+        .js_analog(js_analog),
+        .o_audioL(),
+        .o_audioR(),
+        .led3(),
+        .blank()
 	      );
 
    // cga -> vga
@@ -97,7 +104,8 @@ module ff_verilator;
    assign vgaGreen = vga_rgb[5:3];
    assign vgaRed = vga_rgb[2:0];
 
-   assign pxd = { 24'b0, vgaBlue, vgaGreen[2:1], vgaRed };
+   //assign pxd = { 24'b0, vgaBlue, vgaGreen[2:1], vgaRed };
+   assign pxd =  {8'b11111111,vgaRed,5'b0,vgaGreen,5'b0,vgaBlue,5'b0 } ;
 //   assign pxd = { 24'b0, rgb };
 
    assign vs = {31'b0, ~vga_vsync};

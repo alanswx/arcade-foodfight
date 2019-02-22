@@ -2,9 +2,9 @@
 #
 #
 
-#V = verilator
+V = verilator
 #V = /usr/local/bin/verilator
-V = /usr/local/src/verilator-3.876/bin/verilator
+#V = /usr/local/src/verilator-3.876/bin/verilator
 COSIM = n
 
 TOP = --top-module ff_verilator
@@ -16,7 +16,7 @@ V_INC = +incdir+$(RTL) +incdir+$(CPU) +incdir+$(ROM)
 V_DEFINE = +define+debug=1 +define+SIMULATION=1
 
 CFLAGS = "$(CC_OPT) $(CC_DEFINE) -I../../emu/famec"
-LDFLAGS = "-L../../emu/famec -lSDL -lpthread -lfame"
+LDFLAGS = "-L../../emu/famec -lSDL2 -lpthread -lfame"
 EXE = ./tmp/Vff_verilator
 V_OPT = -O2 
 CC_OPT = -O

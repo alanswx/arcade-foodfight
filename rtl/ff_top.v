@@ -18,7 +18,11 @@ module ff_top(
 	      output [7:0] audio,
 	      output 	   clk_6mhz_o,
 	      input [11:0] sw,
-	      input [8:1]  sw1
+	      input [8:1]  sw1,
+              input clk_100mhz,
+              input [15:0] js_analog,
+	      output [7:0] o_audioL,
+	      output [7:0] o_audioR
 	      );
 
    ff ff(
@@ -47,7 +51,11 @@ module ff_top(
 	 .o_blank(blank),
 	 .o_rgb(rgb),
 	 .o_audio(audio),
-	 .o_clk_6mhz(clk_6mhz_o)
+	 .o_clk_6mhz(clk_6mhz_o),
+         .clk_100mhz(clk_100mhz),
+         .js_analog(js_analog),
+	 .o_audioL(o_audioL),
+	 .o_audioR(o_audioR)
 	 );
    
 endmodule // ff_top

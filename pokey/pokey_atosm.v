@@ -231,7 +231,7 @@ module pokey_atosm(rst_i,
    output [7:0] dat_o;
    output 	ack_o;
    output 	irq;
-   output [5:0] audout;
+   output [7:0] audout;
    output [7:0] serout;
    output 	serout_rdy_o, serin_ack_o;
 
@@ -247,7 +247,7 @@ module pokey_atosm(rst_i,
    wire       ack_o;
    reg [7:0]  dat_o;
 
-   wire [5:0] audout;
+   wire [7:0] audout;
    
    wire [7:0] serin;
    wire       serin_rdy_i;
@@ -305,7 +305,7 @@ module pokey_atosm(rst_i,
 
    wire [7:0] random;
 
-   assign audout = {1'b0, audout0} + {1'b0, audout1} + {1'b0, audout2} + {1'b0, audout3};
+   assign audout = {3'b0, audout0} + {3'b0, audout1} + {3'b0, audout2} + {3'b0, audout3};
    assign rst = (rst_bits == 0);
 
    assign     ack_o = stb_i;
